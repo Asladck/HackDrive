@@ -7,8 +7,7 @@ RUN go mod download
 
 COPY . .
 
-# если main.go лежит в cmd/api/
-RUN go build -ldflags="-w -s" -o out ./cmd/api
+RUN go build -ldflags="-w -s" -o out ./cmd
 
 FROM alpine:latest
 WORKDIR /app
