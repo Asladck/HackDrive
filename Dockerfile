@@ -13,5 +13,6 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/out .
 COPY configs ./configs
+COPY index.html /app/index.html
 
 CMD ["./out"]
