@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"inHack/internal/handler"
@@ -14,9 +13,6 @@ import (
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := initConfig(); err != nil {
-		logrus.Fatal("error initializing configs", err)
-	}
-	if err := godotenv.Load(); err != nil {
 		logrus.Fatal("error initializing configs", err)
 	}
 	//services := service.NewService(repos)

@@ -17,7 +17,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 	router := gin.New()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(files.Handler))
 	router.GET("/", func(c *gin.Context) {
-		c.File("./index.html")
+		c.File(".web/index.html")
 	})
 	h.InitTest(router)
 	return router
