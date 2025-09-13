@@ -12,5 +12,6 @@ RUN go build -ldflags="-w -s" -o out ./cmd
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/out .
+COPY configs ./configs
 
 CMD ["./out"]
