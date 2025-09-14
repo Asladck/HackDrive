@@ -2,6 +2,11 @@ FROM golang:1.25-alpine AS go-builder
 
 WORKDIR /goapp
 COPY ./cmd /goapp/cmd
+COPY go.mod go.sum /goapp/
+COPY ./cmd /goapp/cmd
+COPY ./internal /goapp/internal
+COPY ./scripts /goapp/scripts
+
 RUN go mod init hackdrive || true
 RUN go mod tidy
 RUN go build -o /goapp/server ./cmd/api/main.go
