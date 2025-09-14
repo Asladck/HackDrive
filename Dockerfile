@@ -33,7 +33,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY --from=go-builder /goapp/server /app/server
 
-COPY ./configs/config /app/configs/config
+COPY configs/config /app/configs/config
 
 EXPOSE 5000 8000
 
