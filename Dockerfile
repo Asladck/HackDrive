@@ -1,18 +1,29 @@
-FROM golang:1.25-alpine AS builder
+# Используем официальный Python 3.11 образ
+FROM python:3.11-slim
 
+# Устанавливаем зависимости системы
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
+# Копируем файлы проекта
+COPY ./app /app
+COPY requirements.txt /app/requirements.txt
 
-COPY . .
+# Создаем папку для результатов
+RUN mkdir -p /app/results
 
-RUN go build -ldflags="-w -s" -o out ./cmd
+# Устанавливаем Python зависимости
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-FROM alpine:latest
-WORKDIR /app
-COPY --from=builder /app/out .
-COPY configs ./configs
-COPY index.html /app/index.html
+# Открываем порт для uvicorn
+EXPOSE 5000
 
-CMD ["./out"]
+# Команда запуска
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]

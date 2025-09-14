@@ -1,6 +1,8 @@
-package internal
+package repository
 
 type Repository struct {
 }
 
-func NewRepository(repo Repository)
+func NewRepository() *Repository {
+	return &Repository{}
+}

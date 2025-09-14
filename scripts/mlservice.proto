@@ -1,130 +1,30 @@
 syntax = "proto3";
 
-package hackdrive;
+package caranalysis;
 
-option go_package = "github.com/yourusername/hackdrive-ml/pkg/pb";
+option go_package = "./pb";
 
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
-
-service FileService {
-  rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
-  rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileResponse);
-  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse);
-  rpc DeleteFile(DeleteFileRequest) returns (google.protobuf.Empty);
-  rpc GetFileInfo(FileInfoRequest) returns (FileInfoResponse);
-  rpc AnalyzeImage(AnalyzeImageRequest) returns (AnalyzeImageResponse);
+service CarAnalysis {
+  rpc AnalyzeCar(AnalyzeRequest) returns (AnalyzeResponse);
 }
 
-service UserService {
-  rpc Register(UserRegisterRequest) returns (UserResponse);
-  rpc Login(UserLoginRequest) returns (UserResponse);
-  rpc GetUserProfile(google.protobuf.Empty) returns (UserProfileResponse);
-}
-
-message UploadFileRequest {
-  oneof data {
-    FileMetadata metadata = 1;
-    bytes chunk = 2;
-  }
-}
-
-message FileMetadata {
-  string filename = 1;
-  string user_id = 2;
-  string content_type = 3;
-}
-
-message UploadFileResponse {
-  string file_id = 1;
-  int64 size = 2;
-  string message = 3;
-}
-
-message DownloadFileRequest {
-  string file_id = 1;
-}
-
-message DownloadFileResponse {
-  bytes chunk = 1;
-}
-
-message ListFilesRequest {
-  int32 page = 1;
-  int32 page_size = 2;
-  string filter = 3;
-}
-
-message ListFilesResponse {
-  repeated FileInfo files = 1;
-  int32 total_count = 2;
-  int32 page = 3;
-  int32 page_size = 4;
-}
-
-message FileInfo {
-  string file_id = 1;
+message AnalyzeRequest {
+  bytes image_data = 1;
   string filename = 2;
-  int64 size = 3;
-  string content_type = 4;
-  google.protobuf.Timestamp uploaded_at = 5;
-  bool is_image = 6;
-  repeated Detection detections = 7;
-  string user_id = 8;
+  string user_id = 3;
 }
 
-message DeleteFileRequest {
-  string file_id = 1;
+message AnalyzeResponse {
+  string filename = 1;
+  string condition = 2;
+  int32 confidence = 3;
+  string message = 4;
+  repeated CarIssue issues = 5;
 }
 
-message FileInfoRequest {
-  string file_id = 1;
-}
-
-message FileInfoResponse {
-  FileInfo file_info = 1;
-}
-
-message AnalyzeImageRequest {
-  string file_id = 1;
-}
-
-message AnalyzeImageResponse {
-  repeated Detection detections = 1;
-}
-
-message Detection {
-  string class_name = 1;
-  float confidence = 2;
-  int32 x = 3;
-  int32 y = 4;
-  int32 width = 5;
-  int32 height = 6;
-}
-
-message UserRegisterRequest {
-  string username = 1;
-  string email = 2;
-  string password = 3;
-}
-
-message UserLoginRequest {
-  string email = 1;
-  string password = 2;
-}
-
-message UserResponse {
-  string user_id = 1;
-  string username = 2;
-  string email = 3;
-  string token = 4;
-}
-
-message UserProfileResponse {
-  string user_id = 1;
-  string username = 2;
-  string email = 3;
-  int32 file_count = 4;
-  int64 total_storage_used = 5;
-  google.protobuf.Timestamp registered_at = 6;
+message CarIssue {
+  string type = 1;
+  string location = 2;
+  int32 severity = 3;
+  string description = 4;
 }
