@@ -15,16 +15,18 @@ RUN go build -o /goapp/server ./cmd/api/main.go
 FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libgl1 \
     libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY ./app.py /app/app.py
 COPY ./requirements.txt /app/requirements.txt
 
+RUN pip install --no-cache-dir torch==2.2.1+cpu torchvision==0.17.1+cpu --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
