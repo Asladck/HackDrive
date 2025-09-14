@@ -1,4 +1,5 @@
-package service
+package internal
 
 type Service struct {
+	repository Repository
 }
