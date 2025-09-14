@@ -3,9 +3,9 @@ FROM golang:1.25-alpine AS go-builder
 WORKDIR /goapp
 COPY ./cmd /goapp/cmd
 COPY go.mod go.sum /goapp/
-COPY ./cmd /goapp/cmd
 COPY ./internal /goapp/internal
 COPY ./scripts /goapp/scripts
+COPY configs/config /goapp/configs/config
 
 RUN go mod init hackdrive || true
 RUN go mod tidy
@@ -30,7 +30,10 @@ RUN pip install --no-cache-dir torch==2.2.1+cpu torchvision==0.17.1+cpu --index-
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
+
 COPY --from=go-builder /goapp/server /app/server
+
+COPY ./configs/config /app/configs/config
 
 EXPOSE 5000 8000
 
