@@ -25,6 +25,6 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY --from=go-builder /goapp/server /app/server
 
-EXPOSE 5000 8000  # 5000 для FastAPI, 8000 для Go (если нужно)
+EXPOSE 5000 8000
 
 CMD ["sh", "-c", "python /app/app.py & /app/server"]
